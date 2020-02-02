@@ -67,7 +67,9 @@ for i, _key in enumerate(file_name_list.keys()):
   _cur_father_node = None
   for i2, val2 in enumerate(file_name_list[_key]):
 
-    print('目录： {}'.format(_key))
+    # 越过文件夹
+    if os.path.isdir(os.path.join(file_dir, val2)):
+      continue
 
     # 文件 10.00_00_aa.md
     if '_00_' in val2:
