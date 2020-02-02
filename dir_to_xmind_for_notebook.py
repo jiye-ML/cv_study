@@ -1,13 +1,22 @@
 """
 将目录的内容转化为思维导图，
 
+将 10.00_00_aa.md
+  10.00_01_bb.md
+  10.00_02_cc.md
+
+
+形式的目录结构转化为
+
+10_aa --> 10.00_00.aa.md  --> 10.00_01_bb.md
+                          --> 10.00_02_cc.md
+
+
+
 """
 
 import xmind
 import os
-from xmind.core.const import TOPIC_DETACHED
-from xmind.core.markerref import MarkerId
-from xmind.core.topic import TopicElement
 
 
 # 文件目录
@@ -36,11 +45,9 @@ for _file in os.listdir(file_dir):
 # 思维导图
 w = xmind.load("index.xmind")
 
-
 # get the first sheet
 s1 = w.getPrimarySheet()
 s1.setTitle("index")
-
 
 # get the root topic of this sheet
 r1 = s1.getRootTopic()
@@ -52,15 +59,24 @@ for i, _key in enumerate(file_name_list.keys()):
 
   print(i, _key)
 
+  # 10_aa
   _father_node = r1.addSubTopic()
   _father_node.setTitle(_key)
 
+  # 10.00_00_aa.md
+  _cur_father_node = None
   for i2, val2 in enumerate(file_name_list[_key]):
 
-    _child_node = TopicElement(ownerWorkbook=w)
-    _child_node.setTitle(val2)
-    _child_node.setFileHyperlink('{}/{}'.format(_key, val2))
+    print('目录： {}'.format(_key))
 
-    _father_node.addSubTopic(_child_node)
+    # 文件 10.00_00_aa.md
+    if '_00_' in val2:
+      _cur_father_node = _father_node.addSubTopic()
+      _cur_father_node.setTitle(val2)
+      _cur_father_node.setFileHyperlink('{}/{}'.format(_key, val2))
+    else:
+      _child_node = _cur_father_node.addSubTopic()
+      _child_node.setTitle(val2)
+      _child_node.setFileHyperlink('{}/{}'.format(_key, val2))
 
 xmind.save(w, "index.xmind")
