@@ -25,3 +25,5 @@ conv_trans.weight.data = bilinear_kernel(3, 3, 4)
 y = conv_trans(x).data.squeeze().permute(1, 2, 0).numpy()
 plt.imshow(y.astype('uint8'))
 print(y.shape)
+
+
